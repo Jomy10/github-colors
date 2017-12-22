@@ -16,7 +16,7 @@ type Lang struct {
 	color, url string
 }
 
-func main()  {
+func main() {
 	m := GetGithubColors()
 	writeToJson(m)
 	writeToReadme(m)
@@ -26,7 +26,7 @@ func main()  {
 //use gobind to call this in other language(like java)
 func GetGithubColors() map[string]Lang {
 	m := readFile()
-	langsMap := make(map[string]Lang)
+	langMap := make(map[string]Lang)
 	fmt.Printf("Find %v languages in Github\n", len(m))
 	for name, attrs := range m {
 		//fmt.Printf("%s: %v \n", name, attrs)
@@ -36,12 +36,12 @@ func GetGithubColors() map[string]Lang {
 		//remove space from name
 		newName := strings.Replace(name, " ", "-", -1)
 		if okk && ok {
-			langsMap[newName] = Lang{stringColor, fmt.Sprintf("https://github.com/trending?l=%s", newName)}
+			langMap[newName] = Lang{stringColor, fmt.Sprintf("https://github.com/trending?l=%s", newName)}
 		} else {
-				langsMap[newName] = Lang{"", newName}
+			langMap[newName] = Lang{"", newName}
 		}
 	}
-	return langsMap
+	return langMap
 }
 
 func sliceOfKeys(m map[string]Lang) []string {
@@ -52,22 +52,22 @@ func sliceOfKeys(m map[string]Lang) []string {
 	return keys
 }
 
-func downloadFile(filepath string, url string) (err error) {
-  // Create the file
-	out, err := os.Create(filepath)
+func downloadFile(filePath string, url string) (err error) {
+	// Create the file
+	out, err := os.Create(filePath)
 	checkErr(err)
-  defer out.Close()
+	defer out.Close()
 
-  // Get the data
+	// Get the data
 	resp, err := http.Get(url)
 	checkErr(err)
-  defer resp.Body.Close()
+	defer resp.Body.Close()
 
-  // Writer the body to file
-  _, err = io.Copy(out, resp.Body)
-  checkErr(err)
+	// Writer the body to file
+	_, err = io.Copy(out, resp.Body)
+	checkErr(err)
 
-  return nil
+	return nil
 }
 
 func readFile() map[string]interface{} {
@@ -86,19 +86,19 @@ func readFile() map[string]interface{} {
 	return m
 }
 
-func checkErr(err error) (hasErr bool){
-	hasErr = (err == nil)
+func checkErr(err error) (hasErr bool) {
+	hasErr = err == nil
 	if err != nil {
 		fmt.Println(err)
 	}
 	return hasErr
 }
 
-func writeToJson(m map[string]Lang)  {
+func writeToJson(m map[string]Lang) {
 	//todo
 }
 
-func writeToReadme(m map[string]Lang)  {
+func writeToReadme(m map[string]Lang) {
 	fmt.Println("Write into README.md...")
 	var b []byte
 	s := "# Colors of programming languages on GitHub\n\n"
@@ -114,14 +114,14 @@ func writeToReadme(m map[string]Lang)  {
 		lang := m[name]
 		if lang.color != "" {
 			//replace space -> -;remove #
-		  b = []byte(fmt.Sprintf("[![](http://via.placeholder.com/148x148/%s/ffffff&text=%s)](%s)", lang.color[1:], name, lang.url))
+			b = []byte(fmt.Sprintf("[![](http://via.placeholder.com/148x148/%s/ffffff&text=%s)](%s)", lang.color[1:], name, lang.url))
 			s += string(b)
 		} else {
 			colorless[name] = lang
 		}
 	}
 	fmt.Printf("And %v languages are have no color\n", len(colorless))
-	
+
 	//write cloerless
 	s += "\n\nA few(lot) other languages don't have their own color on GitHub :( \n\n"
 	keys = sliceOfKeys(colorless)
@@ -137,7 +137,7 @@ func writeToReadme(m map[string]Lang)  {
 		s += string(b)
 	}*/
 
-	s += "Curious about all this? Check `ABOUT.md`.\n"
+	s += "\n\nCurious about all this? Check `ABOUT.md`.\n"
 	outByte := []byte(s)
 	ioutil.WriteFile("README.md", outByte, 0644)
 }
