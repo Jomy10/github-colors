@@ -123,13 +123,21 @@ func writeToReadme(m map[string]Lang)  {
 	fmt.Printf("And %v languages are have no color\n", len(colorless))
 	
 	//write cloerless
-	s += "\nA few(lot) other languages don't have their own color on GitHub :( \n\n"
-	for name, lang := range colorless {
+	s += "\n\nA few(lot) other languages don't have their own color on GitHub :( \n\n"
+	keys = sliceOfKeys(colorless)
+	sort.Strings(keys)
+	for _, name := range keys {
+		lang := colorless[name]
 		b = []byte(fmt.Sprintf("- [%s](%s)\n", name, lang.url))
 		s += string(b)
 	}
+	/*
+	for name, lang := range colorless {
+		b = []byte(fmt.Sprintf("- [%s](%s)\n", name, lang.url))
+		s += string(b)
+	}*/
 
-	s += "\nCurious about all this? Check `ABOUT.md`.\n"
+	s += "Curious about all this? Check `ABOUT.md`.\n"
 	outByte := []byte(s)
 	ioutil.WriteFile("README.md", outByte, 0644)
 }
