@@ -38,7 +38,7 @@ func GetGithubColors() map[string]Lang {
 		if okk && ok {
 			langMap[newName] = Lang{stringColor, fmt.Sprintf("https://github.com/trending?l=%s", newName)}
 		} else {
-			langMap[newName] = Lang{"", newName}
+			langMap[newName] = Lang{"", fmt.Sprintf("https://github.com/trending?l=%s", newName)}
 		}
 	}
 	return langMap
