@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gopkg.in/yaml.v2"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ func main() {
 	m := GetGithubColors()
 	writeToJson(m)
 	writeToReadme(m)
-	fmt.Println("ByeBye")
+	defer fmt.Println("ByeBye")
 }
 
 //use gobind to call this in other language(like java)
@@ -95,7 +96,15 @@ func checkErr(err error) (hasErr bool) {
 }
 
 func writeToJson(m map[string]Lang) {
-	//todo
+	fmt.Println("Write into color.json...")
+	colorMap := make(map[string]string)
+	for name, lang := range m {
+		colorMap[name] = lang.color
+	}
+	jsonBytes, err := json.Marshal(colorMap)
+	checkErr(err)
+
+	ioutil.WriteFile("color.json", jsonBytes, 0644)
 }
 
 func writeToReadme(m map[string]Lang) {
