@@ -1,20 +1,21 @@
 package githubColors
 
 import (
-	"fmt"
-	"gopkg.in/yaml.v2"
 	"encoding/json"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"io"
-	"strings"
 	"sort"
+	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Lang struct {
 	//color hex code, language url
-	color, url string
+	Color, Url string
 }
 
 //use gobind to call this in other language(like java)
@@ -92,7 +93,7 @@ func writeToJson(m map[string]Lang) {
 	fmt.Println("Write into color.json...")
 	colorMap := make(map[string]string)
 	for name, lang := range m {
-		colorMap[name] = lang.color
+		colorMap[name] = lang.Color
 	}
 	jsonBytes, err := json.Marshal(colorMap)
 	checkErr(err)
@@ -114,7 +115,7 @@ func writeToReadme(m map[string]Lang) {
 	//write color pic to file
 	for _, name := range keys {
 		lang := m[name]
-		if lang.color != "" {
+		if lang.Color != "" {
 			//replace space -> -;remove #
 			b = []byte(fmt.Sprintf("[![](http://via.placeholder.com/148x148/%s/ffffff&text=%s)](%s)", lang.color[1:], name, lang.url))
 			s += string(b)
@@ -130,14 +131,14 @@ func writeToReadme(m map[string]Lang) {
 	sort.Strings(keys)
 	for _, name := range keys {
 		lang := colorless[name]
-		b = []byte(fmt.Sprintf("- [%s](%s)\n", name, lang.url))
+		b = []byte(fmt.Sprintf("- [%s](%s)\n", name, lang.Url))
 		s += string(b)
 	}
 	/*
-	for name, lang := range colorless {
-		b = []byte(fmt.Sprintf("- [%s](%s)\n", name, lang.url))
-		s += string(b)
-	}*/
+		for name, lang := range colorless {
+			b = []byte(fmt.Sprintf("- [%s](%s)\n", name, lang.url))
+			s += string(b)
+		}*/
 
 	s += "\n\nCurious about all this? Check `ABOUT.md`.\n"
 	outByte := []byte(s)
