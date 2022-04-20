@@ -1,4 +1,4 @@
-package main
+package githubColors
 
 import (
 	"fmt"
@@ -15,13 +15,6 @@ import (
 type Lang struct {
 	//color hex code, language url
 	color, url string
-}
-
-func main() {
-	m := GetGithubColors()
-	writeToJson(m)
-	writeToReadme(m)
-	defer fmt.Println("ByeBye")
 }
 
 //use gobind to call this in other language(like java)
