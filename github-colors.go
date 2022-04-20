@@ -117,7 +117,7 @@ func writeToReadme(m map[string]Lang) {
 		lang := m[name]
 		if lang.Color != "" {
 			//replace space -> -;remove #
-			b = []byte(fmt.Sprintf("[![](http://via.placeholder.com/148x148/%s/ffffff&text=%s)](%s)", lang.color[1:], name, lang.url))
+			b = []byte(fmt.Sprintf("[![](http://via.placeholder.com/148x148/%s/ffffff&text=%s)](%s)", lang.Color[1:], name, lang.Url))
 			s += string(b)
 		} else {
 			colorless[name] = lang
